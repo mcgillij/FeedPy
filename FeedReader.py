@@ -11,10 +11,6 @@ class FeedReader():
     
         self.entries = []
         for l in lists:
-            #pprint(l)
-            status = l['status']
-            if status == 200:
-                #print "success!"
-                for j in l['entries']:
-                    #pprint(j)
-                    self.entries.append({'title': j['title'], 'author': j['author'], 'link': j['link']})
+            for j in l['entries']:
+                #pprint(j)
+                self.entries.append({'title': j['title'], 'author': j['author'], 'link': j['link']})

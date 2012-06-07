@@ -1,6 +1,8 @@
 #!/usr/bin/python
-
+import webbrowser
 from PyQt4 import QtGui, QtCore
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 import sys
 from pprint import pprint
 
@@ -15,20 +17,35 @@ class TestWindow(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.setupUi(self)
         # Pass this "self" for building widgets and
         # keeping a reference.
-        
+        self.uri_list = []
         self.actionQuit.triggered.connect(QtGui.qApp.quit)
-        self.actionOpen.triggered.connect(self.openStuff)
-        self.actionClose.triggered.connect(self.closeStuff)
+        self.actionRefresh.triggered.connect(self.refreshStuff)
+        self.connect(self.pushButton, SIGNAL("clicked()"), self._slotAddClicked)
+        self.listWidget.itemClicked.connect(self._slotItemClicked)
         
-    def closeStuff(self):
-        pprint(dir(self.listWidget))
-        fr = FeedReader(['http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1'])
         
+    def _slotItemClicked(self):
+        for item in self.listWidget.selectedItems():
+            webbrowser.open(item.link)
+        
+    def _slotAddClicked(self):
+        text = self.lineEdit.text()
+        self.listWidget_2.addItem(QListWidgetItem(text))
+        text = str(text)
+        self.uri_list.append(text)
+        self.lineEdit.clear()
+        
+        
+    def refreshStuff(self):
+        #dir(self.listWidget))
+        self.listWidget.clear()
+        pprint(self.uri_list)
+        fr = FeedReader(self.uri_list)
+        #fr = FeedReader(['http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1'])
         for entry in fr.entries:
+            
             RssListItem(entry, self.listWidget)
 
-    def openStuff(self):
-        print "Hi"
         
     def main(self):
         self.show()

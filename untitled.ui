@@ -90,11 +90,6 @@
    <addaction name="menuMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
   <action name="actionRefresh">
    <property name="text">
     <string>Refresh</string>
