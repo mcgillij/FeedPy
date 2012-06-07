@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'untitled.ui'
 #
-# Created: Thu Jun 07 01:17:16 2012
+# Created: Thu Jun 07 02:34:48 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,21 +20,24 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.listWidget = QtGui.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(80, 60, 256, 192))
-        self.listWidget.setObjectName(_fromUtf8("listWidget"))
-        self.lineEdit = QtGui.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(410, 70, 231, 20))
-        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+        self.listWidgetRss = QtGui.QListWidget(self.centralwidget)
+        self.listWidgetRss.setGeometry(QtCore.QRect(0, 0, 791, 401))
+        self.listWidgetRss.setObjectName(_fromUtf8("listWidgetRss"))
+        self.lineEditUrl = QtGui.QLineEdit(self.centralwidget)
+        self.lineEditUrl.setGeometry(QtCore.QRect(10, 450, 161, 20))
+        self.lineEditUrl.setObjectName(_fromUtf8("lineEditUrl"))
         self.label = QtGui.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(350, 70, 46, 13))
+        self.label.setGeometry(QtCore.QRect(10, 430, 161, 16))
         self.label.setObjectName(_fromUtf8("label"))
-        self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(650, 70, 75, 23))
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.listWidget_2 = QtGui.QListWidget(self.centralwidget)
-        self.listWidget_2.setGeometry(QtCore.QRect(450, 140, 256, 192))
-        self.listWidget_2.setObjectName(_fromUtf8("listWidget_2"))
+        self.pushAddButton = QtGui.QPushButton(self.centralwidget)
+        self.pushAddButton.setGeometry(QtCore.QRect(180, 450, 75, 23))
+        self.pushAddButton.setObjectName(_fromUtf8("pushAddButton"))
+        self.listWidgetUrls = QtGui.QListWidget(self.centralwidget)
+        self.listWidgetUrls.setGeometry(QtCore.QRect(10, 480, 291, 71))
+        self.listWidgetUrls.setObjectName(_fromUtf8("listWidgetUrls"))
+        self.pushRefreshButton = QtGui.QPushButton(self.centralwidget)
+        self.pushRefreshButton.setGeometry(QtCore.QRect(690, 440, 75, 23))
+        self.pushRefreshButton.setObjectName(_fromUtf8("pushRefreshButton"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
@@ -45,12 +48,15 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
-        self.actionRefresh = QtGui.QAction(MainWindow)
-        self.actionRefresh.setObjectName(_fromUtf8("actionRefresh"))
         self.actionQuit = QtGui.QAction(MainWindow)
         self.actionQuit.setObjectName(_fromUtf8("actionQuit"))
-        self.menuMenu.addAction(self.actionRefresh)
+        self.actionSave_Url_List = QtGui.QAction(MainWindow)
+        self.actionSave_Url_List.setObjectName(_fromUtf8("actionSave_Url_List"))
+        self.actionLoad_Url_List = QtGui.QAction(MainWindow)
+        self.actionLoad_Url_List.setObjectName(_fromUtf8("actionLoad_Url_List"))
         self.menuMenu.addAction(self.actionQuit)
+        self.menuMenu.addAction(self.actionSave_Url_List)
+        self.menuMenu.addAction(self.actionLoad_Url_List)
         self.menubar.addAction(self.menuMenu.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -58,9 +64,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("MainWindow", "RSS url to add:", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("MainWindow", "RSS url to add to monitoring:", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushAddButton.setText(QtGui.QApplication.translate("MainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushRefreshButton.setText(QtGui.QApplication.translate("MainWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMenu.setTitle(QtGui.QApplication.translate("MainWindow", "Menu", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionRefresh.setText(QtGui.QApplication.translate("MainWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSave_Url_List.setText(QtGui.QApplication.translate("MainWindow", "Save Url List", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionLoad_Url_List.setText(QtGui.QApplication.translate("MainWindow", "Load Url List", None, QtGui.QApplication.UnicodeUTF8))
 
