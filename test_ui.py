@@ -6,6 +6,8 @@ from pprint import pprint
 
 # Import the interface class
 import untitled
+from FeedReader import FeedReader
+from RssListItem import RssListItem
 
 class TestWindow(QtGui.QMainWindow, untitled.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -13,14 +15,17 @@ class TestWindow(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.setupUi(self)
         # Pass this "self" for building widgets and
         # keeping a reference.
+        
         self.actionQuit.triggered.connect(QtGui.qApp.quit)
         self.actionOpen.triggered.connect(self.openStuff)
         self.actionClose.triggered.connect(self.closeStuff)
         
     def closeStuff(self):
         pprint(dir(self.listWidget))
-        list2 = ["hi", "how", "are"]
-        self.listWidget.addItems(list2)
+        fr = FeedReader(['http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1'])
+        
+        for entry in fr.entries:
+            RssListItem(entry, self.listWidget)
 
     def openStuff(self):
         print "Hi"
@@ -34,3 +39,9 @@ if __name__=='__main__':
     tw.main()
     app.exec_()
     # This shows the interface we just created. No logic has been added, yet.
+    # ['http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1'] #
+      #for item in entries:
+         #   #pprint(item)
+          #  pprint(item['title'])
+           # pprint(item['author'])
+           # pprint(item['link'])
