@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'untitled.ui'
 #
-# Created: Wed Jun 06 21:53:39 2012
+# Created: Thu Jun 07 01:13:01 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,9 +21,20 @@ class Ui_MainWindow(object):
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.listWidget = QtGui.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(120, 110, 511, 331))
-        self.listWidget.setAutoFillBackground(True)
+        self.listWidget.setGeometry(QtCore.QRect(80, 60, 256, 192))
         self.listWidget.setObjectName(_fromUtf8("listWidget"))
+        self.lineEdit = QtGui.QLineEdit(self.centralwidget)
+        self.lineEdit.setGeometry(QtCore.QRect(410, 70, 231, 20))
+        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+        self.label = QtGui.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(350, 70, 46, 13))
+        self.label.setObjectName(_fromUtf8("label"))
+        self.pushButton = QtGui.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(650, 70, 75, 23))
+        self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.listWidget_2 = QtGui.QListWidget(self.centralwidget)
+        self.listWidget_2.setGeometry(QtCore.QRect(450, 140, 256, 192))
+        self.listWidget_2.setObjectName(_fromUtf8("listWidget_2"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
@@ -36,12 +47,11 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.actionOpen = QtGui.QAction(MainWindow)
         self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
-        self.actionClose = QtGui.QAction(MainWindow)
-        self.actionClose.setObjectName(_fromUtf8("actionClose"))
+        self.actionRefresh = QtGui.QAction(MainWindow)
+        self.actionRefresh.setObjectName(_fromUtf8("actionRefresh"))
         self.actionQuit = QtGui.QAction(MainWindow)
         self.actionQuit.setObjectName(_fromUtf8("actionQuit"))
-        self.menuMenu.addAction(self.actionOpen)
-        self.menuMenu.addAction(self.actionClose)
+        self.menuMenu.addAction(self.actionRefresh)
         self.menuMenu.addAction(self.actionQuit)
         self.menubar.addAction(self.menuMenu.menuAction())
 
@@ -50,8 +60,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("MainWindow", "RSS url to add:", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMenu.setTitle(QtGui.QApplication.translate("MainWindow", "Menu", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionClose.setText(QtGui.QApplication.translate("MainWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionRefresh.setText(QtGui.QApplication.translate("MainWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
 
