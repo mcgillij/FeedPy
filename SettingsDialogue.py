@@ -10,8 +10,7 @@ class SettingsDialogue(QDialog, diag.Ui_Dialog):
     def __init__(self, parent=None):
         super(SettingsDialogue, self).__init__(parent)
         self.setupUi(self)
-        self.connect(self.pushAddButton, SIGNAL("clicked()"), self._slotAddClicked)
-        self.show()
+        self.pushAddButton.clicked.connect(self._slotAddClicked)
         self.settings = Settings()
         if self.settings.load_settings():
             self.lineEditRefresh.setText(str(self.settings.refresh_time))
@@ -54,4 +53,5 @@ class SettingsDialogue(QDialog, diag.Ui_Dialog):
 if __name__=='__main__':
     app = QApplication(sys.argv)
     MA = SettingsDialogue()
+    MA.show()
     app.exec_()

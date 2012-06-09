@@ -1,9 +1,7 @@
 #!/usr/bin/python
 """ main class """
 import webbrowser
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4 import QtGui
 import sys
 from pprint import pprint
 import os, glob
@@ -25,29 +23,36 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.statusbar.showMessage('Feeds tracked: ' + str(len(self.settings.uri_list)))
         self.actionQuit.triggered.connect(QtGui.qApp.quit)
         self.actionSettings.triggered.connect(self._slotSettings)
-        self.connect(self.pushRefreshButton, SIGNAL("clicked()"), self._slotRefresh)
+        self.pushRefreshButton.clicked.connect(self._slotRefresh)
         self.listWidgetRss.itemClicked.connect(self._slotItemClicked)
         self._slotRefresh()
+        self.settings_dialogue = SettingsDialogue()
         
-        
+
     def _slotSettings(self):
-        diag = SettingsDialogue()
-        return_value = diag.exec_()
+        """ Clicked on the settings menu item """
+        return_value = self.settings_dialogue.show()
         pprint(return_value)
         if return_value == 1:
             self.settings.load_settings()
             self.statusbar.showMessage('Feeds tracked: ' + str(len(self.settings.uri_list)))
+        else:
+            return
 
     def _slotItemClicked(self):
+        """ RSS list item clicked"""
         for item in self.listWidgetRss.selectedItems():
             webbrowser.open(item.feed.link)
 
     def _slotRefresh(self):
+        """ Refresh button clicked """
         self.listWidgetRss.clear()
         fr = FeedReader(self.settings.uri_list)
+        #pprint(fr.entries)
         #fr = FeedReader(['http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1'])
         for entry in fr.entries:
             RssListItem(entry, self.listWidgetRss)
+        self.statusbar.showMessage('Feeds tracked: ' + str(len(self.settings.uri_list)))
 
     def main(self):
         self.show()
