@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'diag.ui'
 #
-# Created: Fri Jun 08 22:34:02 2012
+# Created: Sat Jun 09 01:19:49 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,7 +18,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
         Dialog.setWindowModality(QtCore.Qt.ApplicationModal)
-        Dialog.resize(400, 300)
+        Dialog.resize(537, 300)
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.listWidgetUrls = QtGui.QListWidget(Dialog)
