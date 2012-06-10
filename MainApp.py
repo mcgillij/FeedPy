@@ -30,8 +30,8 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.actionFilters.triggered.connect(self._slotFilters)
         self.pushRefreshButton.clicked.connect(self._slotRefresh)
         self.listWidgetRss.itemClicked.connect(self._slotItemClicked)
-        self.settings_dialogue = SettingsDialogue(parent=self)
-        self.filter_dialogue = FilterDialogue(parent=self)
+        self.settings_dialogue = SettingsDialogue(self.settings, parent=self)
+        self.filter_dialogue = FilterDialogue(self.settings, parent=self)
         self.timer = QTimer()
         self.timer.timeout.connect(self.refresh)
         self.timer.start(self.settings.refresh_time * 60 * 1000)
@@ -55,7 +55,18 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
             self.horizontalLayout.addWidget(widget)
 
     def filter_on(self, filter):
-        pprint (filter)
+        #pprint (filter)
+        pprint(self.feed_reader.entries)
+        new_list = []
+        for e in self.feed_reader.entries:
+            val = check_for_val(e, filter['filter'])
+            if val:
+                new_list.append(e)
+        print "here's the new list"
+        if new_list:
+            self.listWidgetRss.clear()
+            for entry in new_list:
+                RssListItem(entry, self.listWidgetRss)
 
     def _slotFilters(self):
         print "Filters button pushed"
@@ -95,6 +106,13 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
 
     def main(self):
         self.show()
+        
+def check_for_val(entry, pattern):
+    for key, value in entry.items():
+        result = str(value).lower().find(pattern.lower())
+        if result != -1:
+            return True
+    return False
 
 if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)

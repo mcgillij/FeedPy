@@ -7,11 +7,11 @@ from Settings import Settings
 
 class SettingsDialogue(QDialog, diag.Ui_Dialog):
     """ this should pop up a settings window """
-    def __init__(self, parent=None):
+    def __init__(self, settings, parent=None):
         super(SettingsDialogue, self).__init__(parent)
         self.setupUi(self)
         self.pushAddButton.clicked.connect(self._slotAddClicked)
-        self.settings = Settings()
+        self.settings = settings
         if self.settings.load_settings():
             self.lineEditRefresh.setText(str(self.settings.refresh_time))
             for u in self.settings.uri_list:

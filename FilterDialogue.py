@@ -9,12 +9,12 @@ class FilterDialogue(QDialog, filters.Ui_Dialog):
     """ this should pop up a dialogue window to enter filters
     filters can be + or -, meaning inclusive / exclusive
     """
-    def __init__(self, parent=None):
+    def __init__(self, settings, parent=None):
         super(FilterDialogue, self).__init__(parent)
         self.setupUi(self)
         self.pushButtonPlus.clicked.connect(self._slotPlusClicked)
         self.pushButtonMinus.clicked.connect(self._slotMinusClicked)
-        self.settings = Settings()
+        self.settings = settings
         if self.settings.load_settings():
             for f in self.settings.filters:
                 self.listWidgetFilter.addItem(FilterListItem(f['filter'], f['plus']))
