@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>576</width>
-    <height>404</height>
+    <width>584</width>
+    <height>411</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="2" column="0">
      <widget class="QListWidget" name="listWidgetRss">
       <property name="mouseTracking">
        <bool>true</bool>
@@ -31,12 +31,15 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="3" column="0">
      <widget class="QPushButton" name="pushRefreshButton">
       <property name="text">
        <string>Refresh</string>
       </property>
      </widget>
+    </item>
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout"/>
     </item>
    </layout>
   </widget>
@@ -45,7 +48,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>576</width>
+     <width>584</width>
      <height>26</height>
     </rect>
    </property>
@@ -55,6 +58,7 @@
     </property>
     <addaction name="actionQuit"/>
     <addaction name="actionSettings"/>
+    <addaction name="actionFilters"/>
    </widget>
    <addaction name="menuMenu"/>
   </widget>
@@ -67,6 +71,11 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionFilters">
+   <property name="text">
+    <string>Filters</string>
    </property>
   </action>
  </widget>

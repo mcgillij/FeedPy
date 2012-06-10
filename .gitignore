@@ -9,6 +9,7 @@
 *.dat
 dist
 build
+builds
 eggs
 parts
 bin
