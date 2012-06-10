@@ -8,7 +8,7 @@ import time
 entries = []
 class FeedReader(threading.Thread):
     """ Reads through a list of uri's (rss feeds in theory) """
-    def __init__(self, links):
+    def __init__(self):
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
         #lists.append(feedparser.parse(link))
@@ -16,6 +16,8 @@ class FeedReader(threading.Thread):
         
         #start_time = time.time()
         #for i in range(len(links)):
+        
+    def parse(self, links):
         for i in range(5):
             t = ThreadedParser(self.queue)
             t.setDaemon(True)

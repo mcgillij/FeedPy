@@ -35,6 +35,7 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.refresh)
         self.timer.start(self.settings.refresh_time * 60 * 1000)
+        self.feed_reader = FeedReader()
         one_off_timer = QTimer()
         one_off_timer.singleShot(1000, self._slotRefresh)
         one_off_timer.singleShot(0, self.generate_filter_buttons)
@@ -54,11 +55,7 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
             self.horizontalLayout.addWidget(widget)
 
     def filter_on(self, filter):
-        #print "Hi there"
-        #pprint (filter)
-        global fr
-        pprint(fr.entries_
-        self.listWidgetRss.
+        pprint (filter)
 
     def _slotFilters(self):
         print "Filters button pushed"
@@ -89,8 +86,8 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.statusbar.showMessage("Refreshing feeds")
         self.timer.stop()
         self.listWidgetRss.clear()
-        fr = FeedReader(self.settings.uri_list)
-        for entry in fr.entries:
+        self.feed_reader.parse(self.settings.uri_list)
+        for entry in self.feed_reader.entries:
             RssListItem(entry, self.listWidgetRss)
         self.timer.start(self.settings.refresh_time * 60 * 1000)
         status_string = "Refresh took: " + str(int((time.time()- start_time))) + " seconds."
