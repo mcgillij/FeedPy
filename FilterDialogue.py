@@ -12,8 +12,11 @@ class FilterDialogue(QDialog, filters.Ui_Dialog):
     def __init__(self, settings, parent=None):
         super(FilterDialogue, self).__init__(parent)
         self.setupUi(self)
+        self.pushButtonPlus.setDefault(True)
         self.pushButtonPlus.clicked.connect(self._slotPlusClicked)
         self.pushButtonMinus.clicked.connect(self._slotMinusClicked)
+        #self.lineEditFilter.returnPressed.connect(self._slotPlusClicked)
+        
         self.settings = settings
         if self.settings.load_settings():
             for f in self.settings.filters:
@@ -53,7 +56,6 @@ class FilterDialogue(QDialog, filters.Ui_Dialog):
                 self.settings.filters.append({'filter': str(i.value), 'plus': i.plus})
         self.settings.save_settings()
         from pprint import pprint
-        pprint(self.settings.filters)
         return QDialog.accept(self, *args, **kwargs)
 
     def return_items(self):

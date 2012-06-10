@@ -9,14 +9,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>348</width>
-    <height>300</height>
+    <width>437</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Filters</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="1">
+    <widget class="QListWidget" name="listWidgetFilter"/>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -24,7 +27,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -35,7 +38,11 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="lineEditFilter"/>
+    <widget class="QLineEdit" name="lineEditFilter">
+     <property name="inputMethodHints">
+      <set>Qt::ImhUrlCharactersOnly</set>
+     </property>
+    </widget>
    </item>
    <item row="0" column="2">
     <widget class="QPushButton" name="pushButtonPlus">
@@ -44,6 +51,9 @@
        <width>20</width>
        <height>20</height>
       </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhNone</set>
      </property>
      <property name="text">
       <string>+</string>
@@ -64,7 +74,11 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QListWidget" name="listWidgetFilter"/>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Click to remove item.</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -1,38 +1,29 @@
-""" Basic feed parsing """ 
-#TODO add some threads to fetch multiple urls at once, but for now its fine 
+""" Threaded feed parsing """ 
 import feedparser
 from pprint import pprint
 import Queue
 import threading
-import time
+
 entries = []
 class FeedReader(threading.Thread):
     """ Reads through a list of uri's (rss feeds in theory) """
     def __init__(self):
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
-        #lists.append(feedparser.parse(link))
         self.entries = []
-        
-        #start_time = time.time()
-        #for i in range(len(links)):
         
     def parse(self, links):
         global entries
         entries = []
-        for i in range(5):
+        for i in range(5): # 5 threads
             t = ThreadedParser(self.queue)
             t.setDaemon(True)
             t.start()
             
         for link in links:
             self.queue.put(link)
-            
         self.queue.join()
-        
-        #pprint(entries)
         self.entries = entries
-        #print "Elapsed time: %s" % (time.time() - start_time)
 
                     
 class ThreadedParser(threading.Thread):
@@ -45,13 +36,9 @@ class ThreadedParser(threading.Thread):
         while True:
             link = self.queue.get()
             entry = feedparser.parse(link)
+            global entries
             for j in entry['entries']:
-                temp_dict = j
-                if 'image' in entry['feed']: #check if the feed has an image
-                    temp_dict['image'] = entry['feed']['image']
-                if temp_dict:
-                    global entries
-                    entries.append(temp_dict)
+                entries.append(j)
             self.queue.task_done()
         
 
