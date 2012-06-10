@@ -18,6 +18,8 @@ class FeedReader(threading.Thread):
         #for i in range(len(links)):
         
     def parse(self, links):
+        global entries
+        entries = []
         for i in range(5):
             t = ThreadedParser(self.queue)
             t.setDaemon(True)
@@ -27,7 +29,7 @@ class FeedReader(threading.Thread):
             self.queue.put(link)
             
         self.queue.join()
-        global entries
+        
         #pprint(entries)
         self.entries = entries
         #print "Elapsed time: %s" % (time.time() - start_time)

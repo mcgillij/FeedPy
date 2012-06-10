@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'untitled.ui'
 #
-# Created: Sat Jun 09 22:01:44 2012
+# Created: Sat Jun 09 23:35:42 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -61,7 +61,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "FeedPy", None, QtGui.QApplication.UnicodeUTF8))
         MainWindow.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">Mouse over any entries in the main list to see a quick summary, or click the item to launch a browser.</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushRefreshButton.setText(QtGui.QApplication.translate("MainWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushRefreshButton.setText(QtGui.QApplication.translate("MainWindow", "Refresh Feeds", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMenu.setTitle(QtGui.QApplication.translate("MainWindow", "Menu", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSettings.setText(QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))

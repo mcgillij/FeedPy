@@ -22,6 +22,7 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainApp, self).__init__(parent)
         self.setupUi(self)
+        self.active_filter = None
         self.settings = Settings()
         self.settings.load_settings()
         self.statusbar.showMessage('Feeds tracked: ' + str(len(self.settings.uri_list)))
@@ -34,18 +35,23 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.filter_dialogue = FilterDialogue(self.settings, parent=self)
         self.timer = QTimer()
         self.timer.timeout.connect(self.refresh)
-        self.timer.start(self.settings.refresh_time * 60 * 1000)
+        self.timer.start(self.settings.refresh_time * 60 * 100)
         self.feed_reader = FeedReader()
         one_off_timer = QTimer()
-        one_off_timer.singleShot(1000, self._slotRefresh)
         one_off_timer.singleShot(0, self.generate_filter_buttons)
+        one_off_timer.singleShot(100, self.refresh)
+        
         
     def refresh(self):
-        self._slotRefresh()
+        if self.active_filter:
+            self.filter_on(self.active_filter)
+        else:
+            self._slotRefresh()
         self.statusbar.showMessage("Last refresh at: " + str(time.ctime()))
 
     def generate_filter_buttons(self):
         # clear the hbox of widgets before adding new ones.
+        self.active_filter = None
         for i in range(self.horizontalLayout.count()):
             self.horizontalLayout.itemAt(i).widget().close()
             
@@ -55,26 +61,21 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
             self.horizontalLayout.addWidget(widget)
 
     def filter_on(self, filter):
-        #pprint (filter)
-        pprint(self.feed_reader.entries)
+        self.active_filter = filter
         new_list = []
         for e in self.feed_reader.entries:
             val = check_for_val(e, filter['filter'])
             if val:
                 new_list.append(e)
-        print "here's the new list"
         if new_list:
             self.listWidgetRss.clear()
             for entry in new_list:
                 RssListItem(entry, self.listWidgetRss)
 
     def _slotFilters(self):
-        print "Filters button pushed"
         return_value = self.filter_dialogue.exec_()
-        pprint(return_value)
         if return_value == 1:
             self.settings.load_settings()
-            pprint(self.settings.filters)
             self.generate_filter_buttons()
 
     def _slotSettings(self):
