@@ -5,6 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Settings import Settings
 from FilterListItem import FilterListItem
+
 class FilterDialogue(QDialog, filters.Ui_Dialog):
     """ this should pop up a dialogue window to enter filters
     filters can be + or -, meaning inclusive / exclusive
@@ -15,8 +16,6 @@ class FilterDialogue(QDialog, filters.Ui_Dialog):
         self.pushButtonPlus.setDefault(True)
         self.pushButtonPlus.clicked.connect(self._slotPlusClicked)
         self.pushButtonMinus.clicked.connect(self._slotMinusClicked)
-        #self.lineEditFilter.returnPressed.connect(self._slotPlusClicked)
-        
         self.settings = settings
         if self.settings.load_settings():
             for f in self.settings.filters:

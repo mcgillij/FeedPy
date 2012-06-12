@@ -2,7 +2,7 @@
 """ main class """
 import webbrowser
 from PyQt4 import QtGui
-from PyQt4.QtCore import QTimer, QString
+from PyQt4.QtCore import *
 import sys
 from pprint import pprint
 import os, glob
@@ -118,6 +118,8 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
 
     def _slotRefresh(self):
         """ Refresh button clicked """
+        five_hours = 18000
+        local_time = time.mktime(time.gmtime())
         start_time = time.time()
         self.statusbar.showMessage("Refreshing feeds")
         self.timer.stop()
@@ -125,8 +127,22 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.feed_reader.parse(self.settings.uri_list)
         temp_list = self.feed_reader.entries[:]
         temp_list = self.filter_out(temp_list)
+        import datetime
+        has_time = False
         for entry in temp_list:
-            RssListItem(entry, self.listWidgetRss)
+            item = RssListItem(entry, self.listWidgetRss)
+            if 'published_parsed' in item.feed:
+                mytime = time.mktime(item.feed['published_parsed'])
+                has_time = True
+            elif 'updated_parsed' in item.feed:
+                mytime = time.mktime(item.feed['updated_parsed'])
+                has_time = True
+            if has_time:
+                has_time = False
+                difference = local_time - mytime
+                difference = int(difference)
+                if difference < five_hours:
+                    item.setBackgroundColor(Qt.green)
         self.timer.start(self.settings.refresh_time * 60 * 1000)
         status_string = "Refresh took: " + str(int((time.time()- start_time))) + " seconds."
         self.statusbar.showMessage(status_string, 2000)
