@@ -40,9 +40,8 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.timer.start(self.settings.refresh_time * 60 * 100)
         self.feed_reader = FeedReader()
         one_off_timer = QTimer()
-        one_off_timer.singleShot(0, self.generate_filter_buttons)
         one_off_timer.singleShot(100, self._slotRefresh)
-
+        one_off_timer.singleShot(1000, self.generate_filter_buttons)
     def generate_filter_buttons(self):
         # clear the hbox of widgets before adding new ones.
         self.active_filter = None
@@ -51,7 +50,9 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         exclusive_filters = []
         for f in self.settings.filters:
             if f['plus']:
-                widget = QtGui.QPushButton(QString(f['filter']))
+                num = self.get_filter_count(f)
+                widget_text  = f['filter'] + " (" + str(num) + ")"
+                widget = QtGui.QPushButton(QString(widget_text))
                 widget.clicked.connect(functools.partial(self.filter_on, f))
                 self.horizontalLayout.addWidget(widget)
             else:
@@ -60,6 +61,14 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
             self.exclusive_filters = exclusive_filters
         else:
             self.exclusive_filters = None
+
+    def get_filter_count(self, pattern):
+        count = 0
+        for entry in self.feed_reader.entries:
+            contains = check_for_val(entry, pattern['filter'])
+            if contains:
+                count = count + 1
+        return count
 
     def filter_on(self, pattern):
         self.active_filter = pattern
