@@ -43,6 +43,7 @@ class ThreadedParser(threading.Thread):
         
 
 if __name__=='__main__':
-    FR = FeedReader(['http://feeds.feedburner.com/RockPaperShotgun?format=xml', 'http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1']) 
+    FR = FeedReader()
+    FR.parse(['http://feeds.feedburner.com/RockPaperShotgun?format=xml', 'http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1']) 
     #, 'http://www.reddit.com/r/python/.rss', 'http://rss.slashdot.org/Slashdot/slashdot', 'http://www.1up.com/rss?x=1'
     pprint(FR.entries)

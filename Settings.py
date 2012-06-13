@@ -23,11 +23,10 @@ class Settings():
             load_file.close()
             return True
         return False
-    
+
 def check_for_save_file():
     """ check for the existence of a save """
     path = "./"
     for cur_file in glob.glob(os.path.join(path, "*.dat")):
         return True
     return False
-        

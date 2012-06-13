@@ -63,8 +63,10 @@ class FilterDialogue(QDialog, filters.Ui_Dialog):
             yield self.listWidgetFilter.item(i)
         
 if __name__=='__main__':
+    from Settings import Settings
+    settings = Settings()
     app = QApplication(sys.argv)
-    MA = FilterDialogue()
+    MA = FilterDialogue(settings)
     MA.show()
     rc = app.exec_()
     print(str(rc))
