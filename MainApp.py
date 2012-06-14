@@ -23,6 +23,12 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainApp, self).__init__(parent)
         self.setupUi(self)
+        self.makeSysTrayActions()
+        self.makeTrayIcon()
+        self.systrayIcon.messageClicked.connect(self.messageClicked)
+        self.systrayIcon.activated.connect(self.iconActivated)
+        self.setIcon()
+        self.systrayIcon.show()
         self.active_filter = None
         self.exclusive_filters = None
         self.settings = Settings()
@@ -37,26 +43,84 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.filter_dialogue = FilterDialogue(self.settings, parent=self)
         self.timer = QTimer()
         self.timer.timeout.connect(self._slotRefresh)
-        self.timer.start(self.settings.refresh_time * 60 * 100)
+        self.timer.start(self.settings.refresh_time * 60 * 1000)
         self.feed_reader = FeedReader()
         one_off_timer = QTimer()
-        one_off_timer.singleShot(100, self._slotRefresh)
-        one_off_timer.singleShot(1000, self.generate_filter_buttons)
+        one_off_timer.singleShot(1, self._slotRefresh)
+        
+    def setVisible(self, visible):
+        self.minimizeAction.setEnabled(visible)
+        self.maximizeAction.setEnabled(not self.isMaximized())
+        self.restoreAction.setEnabled(self.isMaximized() or not visible)
+        super(MainApp, self).setVisible(visible)
+
+    def closeEvent(self, event):
+        if self.systrayIcon.isVisible():
+            self.hide()
+            event.ignore()
+
+    def setIcon(self):
+        icon = QtGui.QIcon('heart.svg')
+        self.systrayIcon.setIcon(icon)
+        self.setWindowIcon(icon)
+        text_string = QString("Here's some tooltip string")
+        self.systrayIcon.setToolTip(text_string)
+
+    def iconActivated(self, reason):
+        if reason == QtGui.QSystemTrayIcon.Trigger:
+            if super(MainApp, self).isVisible() and self.systrayIcon.isVisible():
+                self.hide()
+            else:
+                self.show()
+        elif reason == QtGui.QSystemTrayIcon.MiddleClick:
+            self.showMessage()
+
+    def showMessage(self):
+        icon = QtGui.QSystemTrayIcon.MessageIcon()
+        duration = 5 * 1000
+        self.systrayIcon.showMessage(QString("Test message"), QString("More text"), icon, duration)
+
+    def messageClicked(self):
+        QtGui.QMessageBox.information(None, "Systray",
+                "Sorry, I already gave what help I could.\nMaybe you should "
+                "try asking a human?")
+
+    def makeTrayIcon(self):
+        self.systrayMenu = QtGui.QMenu(self)
+        self.systrayMenu.addAction(self.minimizeAction)
+        self.systrayMenu.addAction(self.maximizeAction)
+        self.systrayMenu.addAction(self.restoreAction)
+        self.systrayMenu.addSeparator()
+        self.systrayMenu.addAction(self.quitAction)
+        self.systrayIcon = QtGui.QSystemTrayIcon(self)
+        self.systrayIcon.setContextMenu(self.systrayMenu)
+
+    def makeSysTrayActions(self):
+        self.minimizeAction = QtGui.QAction("Mi&nimize", self, triggered=self.hide)
+        self.maximizeAction = QtGui.QAction("Ma&ximize", self, triggered=self.showMaximized)
+        self.restoreAction = QtGui.QAction("&Restore", self, triggered=self.showNormal)
+        self.quitAction = QtGui.QAction("&Quit", self, triggered=QtGui.qApp.quit)
+
     def generate_filter_buttons(self):
         # clear the hbox of widgets before adding new ones.
         self.active_filter = None
         for i in range(self.horizontalLayout.count()):
             self.horizontalLayout.itemAt(i).widget().close()
         exclusive_filters = []
+        systray_text_list = []
         for f in self.settings.filters:
             if f['plus']:
                 num = self.get_filter_count(f)
                 widget_text  = f['filter'] + " (" + str(num) + ")"
+                systray_text_list.append(widget_text)
                 widget = QtGui.QPushButton(QString(widget_text))
                 widget.clicked.connect(functools.partial(self.filter_on, f))
                 self.horizontalLayout.addWidget(widget)
             else:
                 exclusive_filters.append(f)
+        if systray_text_list:
+            text_string = QString("\n".join(systray_text_list))
+            self.systrayIcon.setToolTip(text_string)
         if exclusive_filters:
             self.exclusive_filters = exclusive_filters
         else:
@@ -146,10 +210,11 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.timer.start(self.settings.refresh_time * 60 * 1000)
         status_string = "Refresh took: " + str(int((time.time()- start_time))) + " seconds."
         self.statusbar.showMessage(status_string, 2000)
+        self.generate_filter_buttons()
 
     def main(self):
         self.show()
-        
+
 def check_for_val(entry, pattern):
     for key, value in entry.items():
         if isinstance(value, dict):
@@ -175,4 +240,5 @@ if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)
     MA = MainApp()
     MA.main()
+    app.setStyle(QString("macintosh"))
     app.exec_()
