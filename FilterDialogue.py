@@ -17,10 +17,11 @@ class FilterDialogue(QDialog, filters.Ui_Dialog):
         self.pushButtonPlus.clicked.connect(self._slotPlusClicked)
         self.pushButtonMinus.clicked.connect(self._slotMinusClicked)
         self.settings = settings
-        if self.settings.load_settings():
-            for f in self.settings.filters:
-                self.listWidgetFilter.addItem(FilterListItem(f['filter'], f['plus']))
+        self.settings.load_settings()
+        for f in self.settings.filters:
+            self.listWidgetFilter.addItem(FilterListItem(f['filter'], f['plus']))
         self.listWidgetFilter.itemClicked.connect(self._slotItemClicked)
+        self.lineEditFilter.setFocus()
 
     def _slotItemClicked(self):
         """ clicked on an item in the list widget """

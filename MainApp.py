@@ -17,6 +17,7 @@ import time
 from FilterDialogue import FilterDialogue
 import functools
 import string
+import feedpy_rc
 
 class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
     """ MainApp Class thats generated from the untitled.ui and converted to python """
@@ -27,8 +28,10 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.makeTrayIcon()
         self.systrayIcon.messageClicked.connect(self.messageClicked)
         self.systrayIcon.activated.connect(self.iconActivated)
+        self.systray_text_list = []
         self.setIcon()
         self.systrayIcon.show()
+        self.feed_reader = FeedReader()
         self.active_filter = None
         self.exclusive_filters = None
         self.settings = Settings()
@@ -41,15 +44,20 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.listWidgetRss.itemClicked.connect(self._slotItemClicked)
         self.settings_dialogue = SettingsDialogue(self.settings, parent=self)
         self.filter_dialogue = FilterDialogue(self.settings, parent=self)
-        self.timer = QTimer()
-        self.timer.timeout.connect(self._slotRefresh)
-        self.timer.start(self.settings.refresh_time * 60 * 1000)
-        self.feed_reader = FeedReader()
-        one_off_timer = QTimer()
-        one_off_timer.singleShot(1, self._slotRefresh)
+        self.refresh_timer = QTimer()
+        self.refresh_timer.timeout.connect(self._slotRefresh)
+        if self.settings.refresh_time != 0:
+            self.refresh_timer.start(self.settings.refresh_time * 60 * 1000)
+        self.alert_timer = QTimer()
+        self.alert_timer.timeout.connect(self._slotAlert)
+        if self.settings.alert_time != 0:
+            self.alert_timer.start(self.settings.alert_time * 60 * 1000)
+        self._slotRefresh()
+        #one_off_timer = QTimer()
+        #one_off_timer.singleShot(1, self._slotRefresh)
         
     def setVisible(self, visible):
-        self.minimizeAction.setEnabled(visible)
+        #self.minimizeAction.setEnabled(visible)
         self.maximizeAction.setEnabled(not self.isMaximized())
         self.restoreAction.setEnabled(self.isMaximized() or not visible)
         super(MainApp, self).setVisible(visible)
@@ -60,11 +68,9 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
             event.ignore()
 
     def setIcon(self):
-        icon = QtGui.QIcon('heart.svg')
+        icon = QtGui.QIcon(':images/icon.svg')
         self.systrayIcon.setIcon(icon)
         self.setWindowIcon(icon)
-        text_string = QString("Here's some tooltip string")
-        self.systrayIcon.setToolTip(text_string)
 
     def iconActivated(self, reason):
         if reason == QtGui.QSystemTrayIcon.Trigger:
@@ -75,19 +81,25 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         elif reason == QtGui.QSystemTrayIcon.MiddleClick:
             self.showMessage()
 
+    def _slotAlert(self):
+        if not super(MainApp, self).isVisible():
+            icon = QtGui.QSystemTrayIcon.MessageIcon()
+            duration = 5 * 1000
+            text = QString("\n".join(self.systray_text_list))
+            self.systrayIcon.showMessage(QString("FeedPy Alert"), text , icon, duration)
+
     def showMessage(self):
         icon = QtGui.QSystemTrayIcon.MessageIcon()
         duration = 5 * 1000
-        self.systrayIcon.showMessage(QString("Test message"), QString("More text"), icon, duration)
+        text = QString("\n".join(self.systray_text_list))
+        self.systrayIcon.showMessage(QString("FeedPy Alert"), text , icon, duration)
 
     def messageClicked(self):
-        QtGui.QMessageBox.information(None, "Systray",
-                "Sorry, I already gave what help I could.\nMaybe you should "
-                "try asking a human?")
+        if not super(MainApp, self).isVisible():
+            self.show()
 
     def makeTrayIcon(self):
         self.systrayMenu = QtGui.QMenu(self)
-        self.systrayMenu.addAction(self.minimizeAction)
         self.systrayMenu.addAction(self.maximizeAction)
         self.systrayMenu.addAction(self.restoreAction)
         self.systrayMenu.addSeparator()
@@ -96,7 +108,6 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         self.systrayIcon.setContextMenu(self.systrayMenu)
 
     def makeSysTrayActions(self):
-        self.minimizeAction = QtGui.QAction("Mi&nimize", self, triggered=self.hide)
         self.maximizeAction = QtGui.QAction("Ma&ximize", self, triggered=self.showMaximized)
         self.restoreAction = QtGui.QAction("&Restore", self, triggered=self.showNormal)
         self.quitAction = QtGui.QAction("&Quit", self, triggered=QtGui.qApp.quit)
@@ -107,24 +118,33 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         for i in range(self.horizontalLayout.count()):
             self.horizontalLayout.itemAt(i).widget().close()
         exclusive_filters = []
-        systray_text_list = []
         for f in self.settings.filters:
             if f['plus']:
                 num = self.get_filter_count(f)
                 widget_text  = f['filter'] + " (" + str(num) + ")"
-                systray_text_list.append(widget_text)
                 widget = QtGui.QPushButton(QString(widget_text))
                 widget.clicked.connect(functools.partial(self.filter_on, f))
                 self.horizontalLayout.addWidget(widget)
             else:
                 exclusive_filters.append(f)
-        if systray_text_list:
-            text_string = QString("\n".join(systray_text_list))
-            self.systrayIcon.setToolTip(text_string)
         if exclusive_filters:
             self.exclusive_filters = exclusive_filters
         else:
             self.exclusive_filters = None
+
+    def updateSystrayMessage(self):
+        self.systray_text_list = []
+        all_entries = len(self.feed_reader.entries)
+        text = "All: " + str(all_entries)
+        self.systray_text_list.append(text)
+        for f in self.settings.filters:
+            if f['plus']:
+                num = self.get_filter_count(f)
+                text = f['filter'] + " (" + str(num) + ")"
+                self.systray_text_list.append(text)
+        if self.systray_text_list:
+            text_string = QString("\n".join(self.systray_text_list))
+            self.systrayIcon.setToolTip(text_string)
 
     def get_filter_count(self, pattern):
         count = 0
@@ -146,10 +166,10 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         for i in temp_list:
             RssListItem(i, self.listWidgetRss)
 
-    def filter_out(self, list):
+    def filter_out(self, mylist):
         if self.exclusive_filters:
             temp_list = []
-            for entry in list:
+            for entry in mylist:
                 flagged = False
                 for pattern in self.exclusive_filters:
                     contains = check_for_val(entry, pattern['filter'])
@@ -159,7 +179,7 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
                     temp_list.append(entry)
             return temp_list
         else: 
-            return list
+            return mylist
 
     def _slotFilters(self):
         return_value = self.filter_dialogue.exec_()
@@ -172,6 +192,12 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
         return_value = self.settings_dialogue.exec_()
         if return_value == 1:
             self.settings.load_settings()
+            self.refresh_timer.stop()
+            if self.settings.refresh_time != 0:
+                self.refresh_timer.start(self.settings.refresh_time * 60 * 1000)
+            self.alert_timer.stop()
+            if self.settings.alert_time != 0:
+                self.alert_timer.start(self.settings.alert_time * 60 * 1000)
             self._slotRefresh()
         self.statusbar.showMessage('Feeds tracked: ' + str(len(self.settings.uri_list)))
 
@@ -182,16 +208,16 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
 
     def _slotRefresh(self):
         """ Refresh button clicked """
+        self.statusbar.showMessage("Refreshing feeds")
         five_hours = 18000
         local_time = time.mktime(time.gmtime())
         start_time = time.time()
         self.statusbar.showMessage("Refreshing feeds")
-        self.timer.stop()
+        self.refresh_timer.stop()
         self.listWidgetRss.clear()
         self.feed_reader.parse(self.settings.uri_list)
         temp_list = self.feed_reader.entries[:]
         temp_list = self.filter_out(temp_list)
-        import datetime
         has_time = False
         for entry in temp_list:
             item = RssListItem(entry, self.listWidgetRss)
@@ -207,10 +233,11 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
                 difference = int(difference)
                 if difference < five_hours:
                     item.setBackgroundColor(Qt.green)
-        self.timer.start(self.settings.refresh_time * 60 * 1000)
+        if self.settings.refresh_time != 0:
+            self.refresh_timer.start(self.settings.refresh_time * 60 * 1000)
         status_string = "Refresh took: " + str(int((time.time()- start_time))) + " seconds."
         self.statusbar.showMessage(status_string, 2000)
-        self.generate_filter_buttons()
+        self.updateSystrayMessage()
 
     def main(self):
         self.show()
@@ -240,5 +267,5 @@ if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)
     MA = MainApp()
     MA.main()
-    app.setStyle(QString("macintosh"))
+    app.setStyle(QString("plastique"))
     app.exec_()

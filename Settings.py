@@ -6,6 +6,7 @@ class Settings():
     def __init__(self):
         self.uri_list = []
         self.refresh_time = 1
+        self.alert_time = 1
         self.filters = []
         
     def save_settings(self):
@@ -19,6 +20,7 @@ class Settings():
             settings = pickle.load(load_file)
             self.uri_list = settings.uri_list
             self.refresh_time = settings.refresh_time
+            self.alert_time = settings.alert_time
             self.filters = settings.filters
             load_file.close()
             return True

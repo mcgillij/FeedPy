@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'untitled.ui'
 #
-# Created: Sun Jun 10 04:00:29 2012
+# Created: Thu Jun 14 20:38:38 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 584, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 584, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuMenu = QtGui.QMenu(self.menubar)
         self.menuMenu.setObjectName(_fromUtf8("menuMenu"))
@@ -50,9 +50,10 @@ class Ui_MainWindow(object):
         self.actionSettings.setObjectName(_fromUtf8("actionSettings"))
         self.actionFilters = QtGui.QAction(MainWindow)
         self.actionFilters.setObjectName(_fromUtf8("actionFilters"))
-        self.menuMenu.addAction(self.actionQuit)
         self.menuMenu.addAction(self.actionSettings)
         self.menuMenu.addAction(self.actionFilters)
+        self.menuMenu.addSeparator()
+        self.menuMenu.addAction(self.actionQuit)
         self.menubar.addAction(self.menuMenu.menuAction())
 
         self.retranslateUi(MainWindow)

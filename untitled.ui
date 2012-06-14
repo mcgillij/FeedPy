@@ -49,16 +49,17 @@
      <x>0</x>
      <y>0</y>
      <width>584</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="actionQuit"/>
     <addaction name="actionSettings"/>
     <addaction name="actionFilters"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuMenu"/>
   </widget>

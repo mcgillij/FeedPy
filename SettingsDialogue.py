@@ -12,11 +12,13 @@ class SettingsDialogue(QDialog, diag.Ui_Dialog):
         self.setupUi(self)
         self.pushAddButton.clicked.connect(self._slotAddClicked)
         self.settings = settings
-        if self.settings.load_settings():
-            self.lineEditRefresh.setText(str(self.settings.refresh_time))
-            for u in self.settings.uri_list:
-                self.listWidgetUrls.addItem(QListWidgetItem(u))
+        self.settings.load_settings()
+        self.lineEditRefresh.setText(str(self.settings.refresh_time))
+        self.lineEditAlertAt.setText(str(self.settings.alert_time))
+        for u in self.settings.uri_list:
+            self.listWidgetUrls.addItem(QListWidgetItem(u))
         self.listWidgetUrls.itemClicked.connect(self._slotItemClicked)
+        self.lineEditUrl.setFocus()
 
     def _slotItemClicked(self):
         """ clicked on an item in the list widget """
@@ -34,6 +36,7 @@ class SettingsDialogue(QDialog, diag.Ui_Dialog):
     def accept(self, *args, **kwargs):
         """ Runs when the OK button is pressed and exits the dialogue """
         self.settings.refresh_time = int(self.lineEditRefresh.text())
+        self.settings.alert_time = int(self.lineEditAlertAt.text())
         self.settings.uri_list = []
         items = self.return_items()
         for i in items:
