@@ -17,7 +17,10 @@ import time
 from FilterDialogue import FilterDialogue
 import functools
 import string
-import feedpy_rc
+try:
+    import feedpy_rc
+except:
+    print "failed to load your resource"
 
 class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
     """ MainApp Class thats generated from the untitled.ui and converted to python """
@@ -68,7 +71,7 @@ class MainApp(QtGui.QMainWindow, untitled.Ui_MainWindow):
             event.ignore()
 
     def setIcon(self):
-        icon = QtGui.QIcon(':images/icon.svg')
+        icon = QtGui.QIcon(":/dorf.png")
         self.systrayIcon.setIcon(icon)
         self.setWindowIcon(icon)
 

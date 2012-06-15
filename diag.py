@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'diag.ui'
 #
-# Created: Thu Jun 14 20:38:38 2012
+# Created: Thu Jun 14 22:20:09 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
